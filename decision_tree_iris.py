@@ -3,6 +3,7 @@
 # For Group Comparison - Hussein Hajir 670397
 # ============================================
 
+import time
 from sklearn.datasets import load_iris
 from sklearn.model_selection import train_test_split
 from sklearn.tree import DecisionTreeClassifier
@@ -26,9 +27,14 @@ X_train, X_test, y_train, y_test = train_test_split(
 print(f"Training samples: {len(X_train)}")
 print(f"Test samples: {len(X_test)}")
 
-# 3. Train Decision Tree model
+# 3. Train Decision Tree model with timing
 dt_model = DecisionTreeClassifier(random_state=42)
+
+start_time = time.time()
 dt_model.fit(X_train, y_train)
+end_time = time.time()
+
+training_time = end_time - start_time
 
 # 4. Make predictions
 y_pred = dt_model.predict(X_test)
@@ -42,6 +48,7 @@ f1 = f1_score(y_test, y_pred, average='weighted')
 print("\n" + "="*50)
 print("DECISION TREE RESULTS ON IRIS DATASET")
 print("="*50)
+print(f"Training Time: {training_time:.6f} seconds")
 print(f"Accuracy: {accuracy:.4f}")
 print(f"Precision: {precision:.4f}")
 print(f"Recall: {recall:.4f}")
