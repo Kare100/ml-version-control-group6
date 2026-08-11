@@ -1,7 +1,6 @@
 # =============================================================
 # Part B: Random Forest Model - Group Practical Assessment
 # Course: Collaborative Software Development
-# Member: RichHommie241 (Member 3)
 # Dataset: Iris Dataset
 # Model: Random Forest Classifier
 # =============================================================
@@ -18,14 +17,12 @@ from sklearn.metrics import (
     classification_report, confusion_matrix
 )
 import time
-import sys
 
 # ---------------------------
 # 1. Load Dataset
 # ---------------------------
 print("=" * 55)
 print("  Random Forest Classifier - Iris Dataset")
-print("  Contributor: RichHommie241")
 print("=" * 55)
 
 iris = load_iris()
@@ -56,18 +53,19 @@ print("\n[INFO] Features scaled using StandardScaler")
 # 4. Build & Train Random Forest
 # ---------------------------
 print("\n[INFO] Training Random Forest Classifier...")
-print("       Hyperparameters: n_estimators=100, max_depth=5, random_state=42")
+print("       100 decision trees, max depth = 5, gini criterion")
 
 start_time = time.time()
 
 model = RandomForestClassifier(
-    n_estimators=100,
-    max_depth=5,
+    n_estimators=100,      # 100 trees in the forest
+    max_depth=5,           # limit depth to avoid overfitting
+    criterion='gini',      # gini impurity for splitting
     random_state=42
 )
 model.fit(X_train_scaled, y_train)
 
-train_time = round(time.time() - start_time, 5)
+train_time = round(time.time() - start_time, 4)
 print(f"[INFO] Training completed in {train_time} seconds")
 
 # ---------------------------
@@ -81,7 +79,7 @@ recall    = recall_score(y_test, y_pred, average='weighted')
 f1        = f1_score(y_test, y_pred, average='weighted')
 
 print("\n" + "=" * 55)
-print("  PERFORMANCE METRICS - RANDOM FOREST")
+print("  PERFORMANCE METRICS")
 print("=" * 55)
 print(f"  Accuracy  : {accuracy:.4f}  ({accuracy*100:.2f}%)")
 print(f"  Precision : {precision:.4f}")
@@ -96,11 +94,6 @@ print("--- Confusion Matrix ---")
 cm = confusion_matrix(y_test, y_pred)
 print(cm)
 print("\n[INFO] Rows = Actual class | Columns = Predicted class")
-
-print("\n--- Feature Importances ---")
-for name, score in zip(iris.feature_names, model.feature_importances_):
-    print(f"  {name:20s}: {score:.4f}")
-
 print("=" * 55)
 print("  Evaluation complete.")
 print("=" * 55)
