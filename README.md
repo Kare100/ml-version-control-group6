@@ -6,7 +6,7 @@ Group 6 repository for the Collaborative Software Development practicals.
 
 | Name | GitHub | Model |
 |------|--------|-------|
-| Valerie W. | Kare100 | Neural Network (MLP) |
+| Valerie Mwangi | Kare100 | Neural Network (MLP) |
 | Hussein Hajir Aden | Huska22 | Decision Tree |
 | Videlis Nyarigoti | RichHommie241 | Random Forest |
 
