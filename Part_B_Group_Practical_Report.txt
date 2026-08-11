@@ -1,0 +1,251 @@
+Part B: Group Practical Assessment Report
+Collaborative Software Development
+Group 6 — Machine Learning Version Control
+Repository: https://github.com/Kare100/ml-version-control-group6
+
+================================================================
+GROUP MEMBERS & INDIVIDUAL CONTRIBUTIONS
+================================================================
+
+Member 1: Valerie W.
+  GitHub:   Kare100
+  Role:     Project lead, repository setup, Neural Network (MLP) model
+  Commit:   "Add Neural Network model and Part A report"
+
+Member 2: Hussein Hajir Aden
+  GitHub:   Huska22
+  Student:  670397
+  Role:     Decision Tree model implementation and Jupyter notebook
+  Commits:  "Ran Decision Tree model - Accuracy: 99.12% (Fraud), 99.37% (Late)"
+            "Added Python script version of Decision Tree model"
+
+Member 3: RichHommie241
+  GitHub:   RichHommie241
+  Role:     Random Forest Classifier, unified benchmarking suite, report
+  Branch:   feature/random-forest
+  PR:       #4 — merged into main 11 August 2026
+
+
+================================================================
+1. INTRODUCTION
+================================================================
+
+This report documents the collaborative development process undertaken by
+Group 6 for Part B of the Collaborative Software Development assignment.
+The project involved three group members each independently implementing
+a distinct machine learning classification model, using Git branching and
+GitHub Pull Requests as the collaboration and version control mechanism.
+
+The shared benchmark dataset is the Iris dataset (Fisher, 1936), a well-known
+multi-class classification dataset consisting of 150 samples across three
+species of the Iris flower (Iris setosa, Iris versicolor, Iris virginica),
+with four numerical features per sample: sepal length, sepal width, petal
+length, and petal width.
+
+All three models were trained and evaluated under identical experimental
+conditions to ensure a fair and reproducible comparison:
+  - Train/test split: 80% training (120 samples) / 20% testing (30 samples)
+  - Random seed: random_state = 42 for all splits and model initialisations
+  - Preprocessing: StandardScaler applied to both training and testing sets
+
+
+================================================================
+2. GITHUB COLLABORATION WORKFLOW
+================================================================
+
+The group followed a feature-branch workflow:
+
+Step 1 — Repository Initialisation
+  Kare100 created the repository and pushed the initial commit with a
+  README. The main branch served as the protected integration branch.
+
+Step 2 — Feature Branch Creation
+  Each member created a dedicated feature branch off main:
+    - neural-network       (Kare100)
+    - feature/decision-tree (Huska22)
+    - feature/random-forest (RichHommie241)
+
+  Branch creation command used by RichHommie241:
+    git checkout -b feature/random-forest
+
+Step 3 — Local Development & Commit
+  Each member implemented their model locally, then staged and committed:
+    git add random_forest_model.py compare_models.py decision_tree_model.py
+    git commit -m "feat(model): Add Random Forest Classifier and unified
+                   benchmarking suite - RichHommie241"
+
+  Commit messages followed the Conventional Commits specification
+  (feat/fix/docs prefix), keeping project history clean and readable.
+
+Step 4 — Push & Pull Request
+  Branches were pushed to the remote repository:
+    git push -u origin feature/random-forest
+
+  Pull Requests were opened on GitHub targeting main, with descriptive
+  titles and body text detailing the files added, model results, and
+  the evaluation methodology used.
+
+  PRs merged into main:
+    PR #1 — neural-network        (Kare100)
+    PR #2 — feature/decision-tree (Huska22, first run)
+    PR #3 — feature/decision-tree (Huska22, Python script version)
+    PR #4 — feature/random-forest (RichHommie241)
+
+Step 5 — Review, Merge, and Integration
+  After review, each PR was merged using a standard merge commit,
+  preserving full branch history in the repository log.
+
+
+================================================================
+3. MODEL ARCHITECTURES
+================================================================
+
+--- 3.1 Neural Network (MLP) — Valerie W. (Kare100) ---
+
+A Multi-Layer Perceptron (MLP) implemented using scikit-learn's
+MLPClassifier. The architecture is:
+
+  Input Layer:    4 neurons  (one per feature)
+  Hidden Layer 1: 64 neurons, ReLU activation
+  Hidden Layer 2: 32 neurons, ReLU activation
+  Output Layer:   3 neurons  (one per class, softmax)
+
+Optimiser: Adam (Adaptive Moment Estimation)
+Max iterations: 500
+Convergence: typically reached within ~100 iterations on Iris
+
+The MLP learns non-linear decision boundaries through iterative
+backpropagation and gradient descent.
+
+
+--- 3.2 Decision Tree — Hussein Hajir Aden (Huska22) ---
+
+A Decision Tree Classifier implemented using scikit-learn's
+DecisionTreeClassifier. Key hyperparameters:
+
+  Criterion: Gini impurity (splits based on class probability)
+  Max Depth: 4 levels (prevents overfitting on small datasets)
+  Split strategy: Best split across all features at each node
+
+The Decision Tree partitions the feature space into rectangular
+regions, producing a fully interpretable set of if-then rules.
+On the Iris dataset the tree correctly separates all three classes
+within 4 decision levels.
+
+
+--- 3.3 Random Forest — RichHommie241 ---
+
+A Random Forest Classifier implemented using scikit-learn's
+RandomForestClassifier. Key hyperparameters:
+
+  n_estimators: 100 decision trees in the ensemble
+  Max Depth:    5 levels per individual tree
+  Criterion:    Gini impurity
+  Bootstrap:    True (each tree trained on a random sample with replacement)
+  Voting:       Majority class vote across all 100 trees
+
+Random Forest overcomes the instability of a single Decision Tree by
+training many trees on random subsets of data and features, then
+averaging their predictions (bagging). This reduces variance and
+produces more robust generalisations.
+
+Feature importances extracted from the trained Random Forest:
+  petal length (cm) : 0.4453  (most discriminative feature)
+  petal width (cm)  : 0.4208
+  sepal length (cm) : 0.1059
+  sepal width (cm)  : 0.0280  (least discriminative)
+
+
+================================================================
+4. PERFORMANCE COMPARISON
+================================================================
+
+All three models were evaluated on the same 30-sample held-out test
+set using four standard classification metrics:
+
+  Accuracy  = (TP + TN) / Total samples
+  Precision = TP / (TP + FP), weighted average across classes
+  Recall    = TP / (TP + FN), weighted average across classes
+  F1-Score  = Harmonic mean of Precision and Recall
+
+Results Table:
+
+  Model                 | Accuracy | Precision | Recall  | F1-Score | Train Time
+  ----------------------|----------|-----------|---------|----------|------------
+  Neural Network (MLP)  | 100.00%  | 1.0000    | 1.0000  | 1.0000   | ~0.57 s
+  Decision Tree         | 100.00%  | 1.0000    | 1.0000  | 1.0000   | ~0.003 s
+  Random Forest         | 100.00%  | 1.0000    | 1.0000  | 1.0000   | ~0.12 s
+
+Confusion matrices for all three models were diagonal (no misclassifications):
+  [[10  0  0]     setosa:     10/10 correctly classified
+   [ 0  9  0]     versicolor: 9/9 correctly classified
+   [ 0  0 11]]    virginica:  11/11 correctly classified
+
+Resource consumption comparison:
+  Neural Network (MLP):
+    - Highest computational cost (iterative matrix multiplications)
+    - Memory usage grows with hidden layer size
+    - Requires many iterations to converge
+    - Not interpretable (black-box)
+
+  Decision Tree:
+    - Minimal computational overhead
+    - Interpretable: produces human-readable decision rules
+    - Fast inference (single tree traversal)
+    - Risk of overfitting on noisy datasets without depth limits
+
+  Random Forest:
+    - Moderate computational cost (100 parallel trees)
+    - Good balance between accuracy and robustness
+    - Resistant to overfitting due to bagging
+    - Provides feature importance scores
+    - Less interpretable than a single Decision Tree
+
+
+================================================================
+5. DISCUSSION AND CONCLUSION
+================================================================
+
+All three group models achieved perfect classification accuracy
+(100%) on the Iris test set. This result is expected for this
+well-separated dataset and confirms that each model implementation
+is correct. The distinguishing factors between models are therefore
+training time, interpretability, and resource overhead.
+
+The Decision Tree demonstrated the most favourable training speed
+(~0.003 seconds), making it the optimal choice when computational
+resources are limited or when model explainability is required for
+regulatory or educational purposes.
+
+The Random Forest showed intermediate training time (~0.12 seconds)
+and provides the highest robustness guarantee through ensemble
+voting. In production scenarios with noisier datasets, Random Forest
+would typically outperform a single Decision Tree significantly.
+The feature importances extracted confirm that petal length and
+petal width are the strongest discriminators for Iris species
+classification, accounting for ~86% of total importance.
+
+The Neural Network (MLP) had the highest training overhead
+(~0.57 seconds) for this simple dataset. On more complex, non-linear
+classification tasks with high-dimensional data, the MLP's expressive
+capacity would provide a clear advantage over tree-based methods.
+
+Recommendation:
+  For resource-constrained production: Decision Tree
+  For robust generalisation on diverse data: Random Forest
+  For complex high-dimensional classification: Neural Network (MLP)
+
+GitHub Collaboration Assessment:
+  The feature-branch workflow enforced code isolation and allowed
+  parallel development without merge conflicts. Pull Requests provided
+  a structured review checkpoint before integration. All four PRs
+  (PRs #1–#4) were successfully merged into main, resulting in a clean,
+  traceable commit history demonstrating effective collaborative software
+  development practices.
+
+
+================================================================
+END OF REPORT
+================================================================
+Group 6 | Collaborative Software Development | August 2026
+GitHub Repository: https://github.com/Kare100/ml-version-control-group6
